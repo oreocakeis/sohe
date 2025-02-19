@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="https://fonts.googleapis.com/css2?family=Sigmar+One&display=swap" rel="stylesheet">
+  </head>
+    <style>
+        body {
+  font-family: 'Sigmar One', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 95vh;
+  margin: 0;
+  background-color: #f4f482;
+}
+        #content {
+            border: 1px solid transparent;
+            background-color: #e4e39cbc;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+            padding: 15px;
+            text-align: center;
+        }    
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+        .image {
+    width: 250px; 
+    height: auto;
+    display: block;
+    margin: 0 auto 20px auto; /* para nasa center at may space sa baba */
+}
+#gifContainer {
+    position: absolute;
+    top: 10%;
+    left: 10%;
+  }
+        #yesButton, #noButton {
+            font-size: 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+            transition: 0.3s;
+            padding: 15px;
+            border: none;
+            cursor: pointer;
+            margin: 10px;
+        }
+        #yesButton {
+            background-color: #dcda62bc; /* yellow */
+            color: white;
+            font-family: 'Sigmar One', sans-serif;
+        }
+        #noButton {
+            background-color: #dcda62bc; /* yellow */
+            color: white;
+            font-family: 'Sigmar One', sans-serif;
+        }
+        #noButton:disabled {
+            background-color: #ddd;
+            color: #666;
+            box-shadow: none;
+        }
+        #yesButton:hover, #noButton:hover {
+            box-shadow: 0 12px 20px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
+#gifContainer {
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    opacity: 0;
+    transition: opacity 1.5s ease;
+    z-index: 0;
+    pointer-events: none; /* para clickable pa ang buttons */
+}
+
+#gifContainer.show {
+    opacity: 1;
+}
+
+
+    </style>
+</head>
+<body>
+
+  <div id = "container">
+    <img src="duck.gif" alt="duck" class="image">
+    <div id="content">
+        <h2 id="question">done na ba?</h2>
+        <button id="yesButton">YESZ</button>
+        <button id="noButton">NAUR</button>
+        <p id="message"></p>
+    </div>
+    </div>
+<div id="container">
+  <div id="gifContainer">
+    <img src="cry.gif" alt="cry" class="image">
+</div>
+
+<script>
+var messages = ["bakit no?", "ga? :<", "ah", "deadma sa no", "walang no sa bisaya-english ga", "please :(", "ayan. nasira na tuloy"];
+var noClickCount = 0;
+var noButton = document.getElementById('noButton');
+var yesButton = document.getElementById('yesButton');
+var messageElement = document.getElementById('message');
+var gifArea = document.getElementById('gifContainer');
+
+noButton.addEventListener('click', function() {
+    noClickCount++;
+
+    // step 1: first 3 clicks - shrink no, grow yes
+    if (noClickCount === 1) {
+        yesButton.style.fontSize = '24px';
+    } else if (noClickCount === 2) {
+        this.style.fontSize = '12px';
+        yesButton.style.fontSize = '30px';
+    } else if (noClickCount === 3) {
+        this.style.fontSize = '8px';
+        yesButton.style.fontSize = '40px';
+    }
+    // step 2: move + show messages (without overlapping gif)
+    else if (noClickCount > 3 && noClickCount < 3 + messages.length) {
+        this.style.fontSize = '16px'; // reset size
+
+        var gifRect = gifArea.getBoundingClientRect();
+        var buttonWidth = this.offsetWidth;
+        var buttonHeight = this.offsetHeight;
+        var maxX = window.innerWidth - buttonWidth;
+        var maxY = window.innerHeight - buttonHeight;
+
+        var newX, newY;
+        do {
+            newX = Math.random() * maxX;
+            newY = Math.random() * maxY;
+        } while (
+            newX + buttonWidth > gifRect.left &&
+            newX < gifRect.right &&
+            newY + buttonHeight > gifRect.top &&
+            newY < gifRect.bottom
+        );
+
+        // move no button
+        this.style.position = 'absolute';
+        this.style.left = newX + 'px';
+        this.style.top = newY + 'px';
+
+        // show message above button
+        messageElement.innerText = messages[noClickCount - 4];  
+        messageElement.style.position = 'absolute';
+        messageElement.style.left = newX + 'px';
+        messageElement.style.top = (newY - messageElement.offsetHeight - 10) + 'px';
+    }
+    // step 3: final message + disable no
+    else if (noClickCount === 3 + messages.length) {
+        messageElement.innerText = messages[messages.length - 1];  
+        this.disabled = true;  
+        this.style.color = 'grey';
+    }
+});
+
+document.getElementById('yesButton').addEventListener('click', function() {
+    document.getElementById('question').innerText = 'uwi na :( uwi uwi uwi uwiiiiii';
+
+    var gifContainer = document.getElementById('gifContainer');
+    gifContainer.classList.add('show'); // show gif with fade-in
+
+    // hide buttons and message
+    this.style.display = 'none';
+    document.getElementById('noButton').style.display = 'none';
+    document.getElementById('message').style.display = 'none';
+    
+});
+        
+    </script>
+</body>
+</html>
