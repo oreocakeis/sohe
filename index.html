@@ -84,7 +84,7 @@ button {
 }
 #gifContainer {
     position: absolute;
-    top: 10%;
+    top: 5%;
     left: 10%;
     opacity: 0;
     transition: opacity 1.5s ease;
@@ -101,14 +101,16 @@ button {
         padding: 8px 16px;
     }
 }
-
+.green-text {
+  color: #4a7c59; /* soft dark green */
+}
 
     </style>
 </head>
 <body>
 
   <div id = "container">
-    <img src="duck.gif" alt="duck" class="image">
+    <img id="firstGif" src="duck.gif" alt="duck" class="image">
     <div id="content">
         <h2 id="question">done na ba?</h2>
         <button id="yesButton">YESZ</button>
@@ -118,11 +120,19 @@ button {
     </div>
 <div id="container">
   <div id="gifContainer">
-    <img src="cry.gif" alt="cry" class="image">
+<img id="secondGif" src="cry.gif" alt="cry" class="image">
 </div>
 
 <script>
-var messages = ["bakit no?", "ga? :<", "ah", "deadma sa no", "walang no sa bisaya-english ga", "please :(", "ayan. nasira na tuloy"];
+var messages = [
+  '<span class="green-text">bakit no?</span>',
+  '<span class="green-text">ga? :<</span>',
+  '<span class="green-text">ah</span>',
+  '<span class="green-text">deadma sa no</span>',
+  '<span class="green-text">walang no sa bisaya-english ga</span>',
+  '<span class="green-text">please :(</span>',
+  '<span class="green-text">ayan, nasira na tuloy</span>'];
+  
 var noClickCount = 0;
 var noButton = document.getElementById('noButton');
 var yesButton = document.getElementById('yesButton');
@@ -169,14 +179,14 @@ noButton.addEventListener('click', function() {
         this.style.top = newY + 'px';
 
         // show message above button
-        messageElement.innerText = messages[noClickCount - 4];  
+        messageElement.innerHTML = messages[noClickCount - 4];
         messageElement.style.position = 'absolute';
         messageElement.style.left = newX + 'px';
         messageElement.style.top = (newY - messageElement.offsetHeight - 10) + 'px';
     }
     // step 3: final message + disable no
     else if (noClickCount === 3 + messages.length) {
-        messageElement.innerText = messages[messages.length - 1];  
+        messageElement.innerHTML = messages[messages.length - 1];  
         this.disabled = true;  
         this.style.color = 'grey';
     }
@@ -192,7 +202,9 @@ document.getElementById('yesButton').addEventListener('click', function() {
     this.style.display = 'none';
     document.getElementById('noButton').style.display = 'none';
     document.getElementById('message').style.display = 'none';
-    
+
+    // hide the first gif
+    document.getElementById('firstGif').style.display = 'none';
 });
         
     </script>
